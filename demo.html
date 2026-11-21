@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smartbox Demo Live</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<header class="top">
+  <h1>Smartbox <span>· demo live nel browser</span></h1>
+  <nav class="tabs"><a href="index.html">← Dashboard</a></nav>
+</header>
+<main>
+  <div class="banner info small">Stessa logica della smartbox (PERCLOS, microsonno, sbadigli, chinamento, isteresi), eseguita interamente nel browser.
+    Il video <b>non lascia mai questo computer</b>: si calcolano solo EAR, MAR e inclinazione. Da usare seduti davanti al PC, mai durante la guida.</div>
+
+  <div class="demo-layout">
+    <div>
+      <div class="video-box" id="vbox">
+        <video id="video" playsinline muted></video>
+        <canvas id="overlay"></canvas>
+        <div class="placeholder" id="ph"><span>Premi <b>Avvia camera</b> e consenti l'accesso alla webcam.</span></div>
+        <div class="prompt hidden" id="prompt"></div>
+      </div>
+      <div class="toolbar" style="margin-top:12px">
+        <button class="primary" id="b-start">Avvia camera</button>
+        <button id="b-calib" disabled>Calibra (10 s)</button>
+        <button id="b-proto" disabled>Protocollo 60 s</button>
+        <button id="b-yawn" disabled>Prova sbadigli 60 s</button>
+        <button id="b-stop" disabled>Ferma</button>
+        <label class="small"><input type="checkbox" id="sound" checked> avviso sonoro</label>
+        <label class="small"><input type="checkbox" id="voice" checked> istruzioni a voce</label>
+        <span class="small muted" id="fps"></span>
+      </div>
+    </div>
+
+    <div class="grid" style="align-content:start">
+      <div class="card">
+        <div class="level-big l0" id="level">Normale</div>
+        <div class="meters">
+          <div class="meter"><div class="v" id="m-ear">–</div><div class="l">EAR occhi</div></div>
+          <div class="meter"><div class="v" id="m-mar">–</div><div class="l">MAR bocca</div></div>
+          <div class="meter"><div class="v" id="m-pitch">–</div><div class="l">Capo (°)</div></div>
+          <div class="meter"><div class="v" id="m-perclos">–</div><div class="l">PERCLOS</div></div>
+        </div>
+      </div>
+      <div class="card"><h2>Ultimi 30 secondi</h2><div class="chart-box" style="height:200px"><canvas id="c-live"></canvas></div></div>
+    </div>
+  </div>
+
+  <section class="grid cols-2" style="margin-top:16px">
+    <div class="card">
+      <h2>Eventi</h2>
+      <div class="table-wrap" style="max-height:280px"><table id="events"><tr><td class="muted">Nessun evento</td></tr></table></div>
+    </div>
+    <div class="card">
+      <h2>Soglie</h2>
+      <div class="settings" id="settings"></div>
+      <div class="toolbar" style="margin-top:12px">
+        <button id="b-yaml">Scarica config_tarata.yaml</button>
+        <button id="b-reset">Valori di partenza</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card hidden" id="result">
+    <h2>Risultato del protocollo</h2>
+    <div class="grid cols-4" id="r-kpis"></div>
+    <div class="table-wrap" style="margin-top:12px"><table id="r-detail"></table></div>
+    <div class="toolbar" style="margin-top:12px">
+      <button id="d-ev">eventi.csv</button><button id="d-ind">indicatori.csv</button><button id="d-ann">annotazioni.csv</button>
+      <span class="small muted">I file sono compatibili con <span class="mono">tools/evaluate.py</span> e con la scheda Validazione della dashboard.</span>
+    </div>
+  </section>
+</main>
+<script type="module" src="demo.js?v=2"></script>
+</body>
+</html>

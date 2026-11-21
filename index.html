@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smartbox Flotta</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<header class="top">
+  <h1>Smartbox <span>· monitoraggio sonnolenza</span></h1>
+  <nav class="tabs" id="tabs">
+    <button data-tab="flotta" class="active">Flotta</button>
+    <button data-tab="eventi">Eventi</button>
+    <button data-tab="statistiche">Statistiche</button>
+    <button data-tab="validazione">Validazione</button>
+    <a href="demo.html">Demo live ↗</a>
+  </nav>
+</header>
+
+<main>
+  <div id="banner" class="banner hidden"></div>
+
+  <!-- FLOTTA -->
+  <div data-panel="flotta">
+    <section class="grid cols-4" id="kpis"></section>
+    <section>
+      <h2 class="sec">Veicoli <span class="muted small" id="ws-state"></span></h2>
+      <div class="grid cols-3" id="vehicles"></div>
+    </section>
+    <section class="card">
+      <h2>Ultimi allarmi</h2>
+      <div class="table-wrap"><table id="recent"></table></div>
+    </section>
+  </div>
+
+  <!-- EVENTI -->
+  <div data-panel="eventi" class="hidden">
+    <div class="card">
+      <div class="toolbar">
+        <select id="f-vehicle"><option value="">Tutti i veicoli</option></select>
+        <select id="f-level">
+          <option value="0">Tutti i livelli</option><option value="1">≥ attenzione</option><option value="2">Solo pericolo</option>
+        </select>
+        <label class="small"><input type="checkbox" id="f-alarms" checked> solo salite di livello</label>
+        <button id="f-apply">Aggiorna</button>
+        <button id="f-export" style="margin-left:auto">Esporta CSV</button>
+      </div>
+      <div class="table-wrap"><table id="events"></table></div>
+    </div>
+  </div>
+
+  <!-- STATISTICHE -->
+  <div data-panel="statistiche" class="hidden">
+    <div class="toolbar">
+      <select id="s-days"><option value="1">Ultime 24 ore</option><option value="7" selected>Ultimi 7 giorni</option><option value="30">Ultimi 30 giorni</option></select>
+      <select id="s-vehicle"><option value="">Tutti i veicoli</option></select>
+    </div>
+    <section class="grid cols-4" id="s-kpis"></section>
+    <section class="grid cols-2">
+      <div class="card"><h2>Allarmi per giorno</h2><div class="chart-box"><canvas id="c-day"></canvas></div></div>
+      <div class="card"><h2>Allarmi per motivo</h2><div class="chart-box"><canvas id="c-reason"></canvas></div></div>
+      <div class="card"><h2>Allarmi per ora del giorno</h2><div class="chart-box"><canvas id="c-hour"></canvas></div></div>
+      <div class="card"><h2>Nota</h2><p class="small muted">Le statistiche contano solo le <b>salite</b> di livello (un allarme = un episodio).
+        I dati restano nel backend per il periodo di conservazione configurato e poi vengono cancellati automaticamente.
+        Il sistema non deve essere usato per valutare la prestazione del lavoratore (limitazione della finalità, tesi §3.16).</p></div>
+    </section>
+  </div>
+
+  <!-- VALIDAZIONE -->
+  <div data-panel="validazione" class="hidden">
+    <div class="card">
+      <h2>Validazione offline (capitolo 5)</h2>
+      <p class="small muted">Carica <span class="mono">eventi.csv</span> prodotto dalla smartbox o dal notebook e le annotazioni
+        (<span class="mono">inizio_s,fine_s,tipo</span>). Opzionale: <span class="mono">indicatori.csv</span>
+        (<span class="mono">t,face,ear,mar,pitch</span>, esportato dalla demo live) per la tabella di sensibilità della soglia EAR.
+        Tutto viene calcolato nel browser: i file non vengono inviati a nessun server.</p>
+      <div class="toolbar">
+        <label class="file">📄 eventi.csv <input type="file" id="v-det" accept=".csv"></label>
+        <label class="file">🏷️ annotazioni.csv <input type="file" id="v-ann" accept=".csv"></label>
+        <label class="file">📈 indicatori.csv <input type="file" id="v-ind" accept=".csv"></label>
+        <label class="small">tolleranza <input type="number" id="v-tol" value="3" step="0.5" min="0" style="width:70px"> s</label>
+        <button class="primary" id="v-run">Calcola</button>
+        <button id="v-example">Usa protocollo standard</button>
+      </div>
+      <div id="v-files" class="small muted"></div>
+    </div>
+    <section class="grid cols-4" id="v-kpis" style="margin-top:16px"></section>
+    <section class="grid cols-2">
+      <div class="card"><h2>Episodi</h2><div class="table-wrap"><table id="v-detail"></table></div></div>
+      <div class="card"><h2>Sensibilità soglia EAR</h2><div class="chart-box"><canvas id="v-sweep"></canvas></div>
+        <div class="table-wrap"><table id="v-sweep-t"></table></div></div>
+    </section>
+  </div>
+</main>
+<footer>Smartbox v4 · nessuna immagine lascia il veicolo: qui arrivano solo sintesi degli eventi.</footer>
+<script type="module" src="dashboard.js"></script>
+</body>
+</html>
